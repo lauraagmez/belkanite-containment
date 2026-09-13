@@ -122,6 +122,6 @@ The simulation environment and part of the supporting infrastructure were provid
 
 ## Author
 
-**Laura**  
+**Laura Padilla**  
 Computer Engineering & Business Administration student  
 University of Granada

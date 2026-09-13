@@ -1,10 +1,10 @@
 # Belkanite Containment
 
 
-**Development period:** February – May 2026
-**Course:** Artificial Intelligence
-**University:** University of Granada
-**Language:** C++
+**Development period:** February – May 2026  
+**Course:** Artificial Intelligence  
+**University:** University of Granada  
+**Language:** C++  
 
 Academic Artificial Intelligence project developed in C++ as part of the Artificial Intelligence course at the University of Granada.
 

@@ -1,124 +1,284 @@
 # Belkanite Containment
 
-
-**Development period:** February – May 2026  
+**Development period:** April – May 2026  
 **Course:** Artificial Intelligence  
 **University:** University of Granada  
-**Language:** C++  
+**Language:** C++
 
-Academic Artificial Intelligence project developed in C++ as part of the Artificial Intelligence course at the University of Granada.
+Artificial Intelligence project developed in C++ focused on the design of reactive and deliberative autonomous agents.
 
-The project focuses on the design of autonomous agents capable of exploring an environment, planning routes, making decisions under different constraints and coordinating with each other to solve increasingly complex scenarios.
+The project follows two agents, an **Engineer** and a **Technician**, whose objective is to contain toxic Belkanite leaks by exploring the environment, planning routes and ultimately constructing a viable pipeline to a waste treatment plant.
+
+## Final mission
+
+![Belkanite Containment final mission](images/level6-final-mission.png)
+
+The project progressively combines reactive exploration, state-space search, heuristic planning, resource constraints and multi-agent coordination.
 
 ## Overview
 
-The system includes two autonomous agents:
+The environment is represented as a discrete map containing different terrain types, elevation levels, obstacles, equipment and treatment plants.
 
-- **Engineer**
-- **Technician**
+The two agents have different capabilities and must cooperate to complete increasingly complex tasks.
 
-Each agent has different capabilities and behaviours depending on the scenario. The project combines reactive decision-making, environment exploration, state-space search, heuristic planning and multi-agent coordination.
+The **Engineer** can move, jump, modify terrain height and coordinate the construction process.
 
-## Main features
+The **Technician** assists the Engineer during pipeline construction and has different movement capabilities depending on the available equipment.
 
-- Autonomous agent design
-- Reactive and deliberative behaviours
-- Exploration of partially unknown environments
-- Internal map construction using sensor information
-- State-space search
-- Route planning
-- Heuristic search
-- A* search
-- Energy-aware planning
-- Environmental impact constraints
-- Obstacle avoidance and replanning
-- Multi-agent coordination
-- Pipeline network planning
+Throughout the different levels, the agents evolve from simple reactive behaviours to complete deliberative planning and coordinated execution.
 
-## Artificial Intelligence techniques
+## Project levels
 
-### Reactive exploration
+### Level 0 — Reactive navigation
 
-The agents make decisions using information received from their sensors while maintaining knowledge about previously explored areas.
+Both agents operate on an initially unknown map and must independently reach different waste treatment plants.
 
-They prioritise unexplored or less-visited positions and adapt their behaviour according to terrain, obstacles, height differences and other agents.
+The solution is based on reactive behaviour using the information provided by the agents' sensors.
 
-### State-space search
+This level introduces autonomous navigation without prior knowledge of the environment.
 
-Navigation is modelled as a search problem considering:
+### Level 1 — Reactive exploration
+
+The agents explore an initially unknown environment and progressively construct their internal representation of the world.
+
+My exploration strategy includes:
+
+- Selection of promising visible cells according to terrain priorities
+- Preference for useful equipment when it has not yet been collected
+- Tracking the number of visits to each position
+- Selection of less-visited cells to encourage exploration
+- Detection and breaking of repetitive movement loops
+- Use of `JUMP` by the Engineer when it provides a safe exploration advantage
+
+![Reactive exploration](images/level1-exploration.png)
+
+### Level 2 — Engineer route planning
+
+The Engineer must reach the detected Belkanite leak while minimising the number of simulation steps.
+
+The state representation considers:
 
 - Position
 - Orientation
+- Equipment state
+
+The search also considers the Engineer's ability to use `JUMP`, terrain accessibility, elevation differences and the effect of obtaining shoes.
+
+An A* search strategy is used to guide the Engineer towards the destination while finding an efficient route.
+
+![Engineer route planning](images/level2-engineer-route.png)
+
+### Level 3 — Energy-aware Technician planning
+
+The Technician must reach the Belkanite leak while minimising total energy consumption.
+
+The search is based on A*, but the accumulated cost represents **energy consumption** rather than simply the number of actions.
+
+Movement cost depends on factors such as:
+
+- Terrain type
+- Elevation differences
 - Available actions
-- Terrain restrictions
-- Height differences
-- Agent equipment
+- Equipment state
 
-Different search strategies are applied depending on the scenario.
+A Chebyshev-distance heuristic is used to estimate the remaining distance to the destination.
 
-### A* and heuristic planning
+The Technician's equipment also affects accessibility: after obtaining the shoes, forest cells become traversable.
 
-The Technician uses heuristic search and A* to calculate routes while minimising energy consumption.
+![Technician A* route planning](images/level3-technician-route.png)
 
-The evaluation considers accumulated cost, heuristic distance, terrain type and height variations.
+### Level 4 — Pipeline planning
 
-### Pipeline planning
+The objective changes from moving an agent to planning an entire pipeline network.
 
-The Engineer plans a pipeline route between the Belkanite installation and a treatment plant while respecting:
+The Engineer must calculate a valid pipeline connecting the Belkanite leak to a waste treatment plant.
 
-- Energy limits
-- Ecological impact limits
-- Terrain restrictions
+The planner considers:
+
+- Pipeline length
 - Terrain elevation
 - Excavation operations
-- Elevation operations
-- Water-flow constraints
+- Terrain elevation operations
+- Available energy
+- Maximum ecological impact
+- Valid gravity flow between consecutive pipeline sections
+
+The pipeline state stores the current position, effective terrain height, accumulated energy consumption, ecological impact and the sequence of planned pipeline sections.
+
+The search uses an A*-based strategy where the accumulated cost represents the number of pipeline sections and the heuristic estimates the distance to the nearest treatment plant.
+
+![Pipeline planning](images/level4-pipeline-plan.png)
+
+### Level 5 — Multi-agent pipeline construction
+
+In this level, the planned pipeline must actually be constructed.
+
+The solution combines the planning mechanisms developed in the previous levels with coordinated execution between the Engineer and the Technician.
+
+The Engineer first calculates a valid pipeline and then both agents repeatedly:
+
+- Move towards the required construction positions
+- Modify terrain when necessary
+- Position themselves on consecutive pipeline cells
+- Align face-to-face
+- Execute `INSTALL` simultaneously
+- Continue with the next pipeline section
+
+The behaviour is organised through state machines that control the different stages of movement, alignment, terrain modification and installation.
+
+Route-planning algorithms from previous levels are reused to move both agents between construction positions.
+
+Reactive checks are also used to handle collisions, temporary blocking situations and unexpected interference between the two agents.
+
+![Multi-agent pipeline construction](images/level5-construction.png)
+
+### Level 6 — Exploration, planning and execution
+
+The final level combines the techniques developed throughout the entire project.
+
+Unlike Level 5, the map is initially unknown.
+
+The solution is divided into three main phases:
+
+**Exploration**
+
+The Engineer and Technician explore the environment using the reactive behaviour developed for Level 1 while progressively constructing the known map.
+
+**Planning**
+
+Once enough information has been discovered, the Engineer attempts to calculate a viable pipeline between the Belkanite leak and a treatment plant.
+
+If no valid solution can yet be found, the agents return to exploration and gather additional information.
+
+**Execution**
+
+Once a valid plan exists, the agents switch to the coordinated construction behaviour developed for Level 5.
+
+This final scenario combines reactive exploration, A* route planning, pipeline planning and multi-agent coordination in a partially observable environment.
+
+## Artificial Intelligence techniques
+
+### Reactive agents
+
+The first stages of the project use sensor-driven reactive behaviour.
+
+The agents analyse their immediate environment, prioritise useful terrain and equipment, maintain information about visited locations and detect repetitive movement patterns.
+
+### State-space search
+
+Navigation problems are represented through states containing the information required to distinguish different possible situations, including position, orientation and equipment.
+
+Previously explored states are tracked to avoid unnecessary repeated exploration.
+
+### A* search
+
+A* is used in several parts of the project with different optimisation criteria.
+
+For the Engineer, the search is used to find efficient routes towards a destination.
+
+For the Technician, the accumulated cost represents energy consumption, allowing the search to prioritise routes that require less energy.
+
+### Heuristic search
+
+Heuristic functions guide the search towards promising states and reduce the amount of unnecessary exploration.
+
+For Technician navigation, a Chebyshev-distance heuristic is used because movement can occur in eight orientations.
+
+### Resource-aware planning
+
+Some problems require considering more than distance.
+
+The pipeline planner also keeps track of:
+
+- Available energy
+- Ecological impact
+- Terrain elevation
+- Terrain modifications
+- Pipeline length
+
+States that exceed the available resource limits are discarded during the search.
 
 ### Multi-agent coordination
 
-In the advanced scenarios, the Engineer and Technician cooperate to construct the pipeline network.
+The advanced levels require the Engineer and Technician to cooperate.
 
-The agents coordinate movement, terrain preparation and pipeline installation while avoiding collisions and replanning when necessary.
+Their behaviour is controlled through state machines that coordinate movement, positioning, communication and simultaneous pipeline installation.
+
+### Hybrid reactive-deliberative behaviour
+
+The final stages combine deliberative planning with reactive mechanisms.
+
+Plans determine the general strategy, while reactive checks handle local problems such as obstacles, collisions, agent interference and incomplete information.
+
+## My contribution
+
+The simulator and supporting infrastructure were provided as part of the Artificial Intelligence course.
+
+My implementation is primarily contained in:
+
+`Comportamientos_Agentes/`
+
+and consists of the behaviour developed for both autonomous agents:
+
+- `ingeniero.cpp`
+- `ingeniero.hpp`
+- `tecnico.cpp`
+- `tecnico.hpp`
+
+The implemented work includes reactive exploration, state representation, search algorithms, heuristic functions, energy-aware planning, pipeline planning, state machines and multi-agent coordination.
 
 ## Project structure
 
-- `Comportamientos_Agentes/` — main autonomous-agent implementation
-- `mapas/` — simulation environments
-- `include/` — headers and simulator infrastructure
-- `src/` — simulator source code
-- `bin_src/` — executable entry points
-- `ply/` — graphical model resources
-- `CMakeLists.txt` — project build configuration
+```text
+belkanite-containment/
+├── Comportamientos_Agentes/
+│   ├── ingeniero.cpp
+│   ├── ingeniero.hpp
+│   ├── tecnico.cpp
+│   └── tecnico.hpp
+├── images/
+│   ├── level1-exploration.png
+│   ├── level2-engineer-route.png
+│   ├── level3-technician-route.png
+│   ├── level4-pipeline-plan.png
+│   ├── level5-construction.png
+│   └── level6-final-mission.png
+├── include/
+├── src/
+├── bin_src/
+├── mapas/
+├── ply/
+├── CMakeLists.txt
+├── install.sh
+└── README.md
+```
 
 The main Artificial Intelligence implementation developed for the assignment is located in `Comportamientos_Agentes/`.
 
-### Engineer
-
-`ingeniero.cpp` and `ingeniero.hpp`
-
-Includes exploration, route search, pipeline planning, ecological and energy constraints, and coordination with the Technician.
-
-### Technician
-
-`tecnico.cpp` and `tecnico.hpp`
-
-Includes exploration, heuristic route planning, energy-aware search and coordination with the Engineer.
+The remaining source files provide the simulator and supporting infrastructure required to run the project.
 
 ## Technologies
 
 - C++
 - STL
+- Artificial Intelligence
+- Reactive agents
+- Deliberative agents
+- State-space search
+- A* search
+- Heuristic search
+- Multi-agent systems
 - CMake
 - Git
 - GitHub
 
-Data structures used include `vector`, `list`, `queue`, `priority_queue`, `set`, `map` and `tuple`.
+C++ data structures used throughout the implementation include `vector`, `list`, `queue`, `priority_queue`, `set`, `map` and `tuple`.
 
 ## Academic context
 
-Developed for the **Artificial Intelligence** course during the 2025/2026 academic year at the University of Granada.
+Developed for the **Artificial Intelligence** course during the **2025/2026 academic year** at the **University of Granada**.
 
-The simulation environment and part of the supporting infrastructure were provided as part of the course. The autonomous-agent behaviour and planning logic developed for the assignment is primarily contained in `Comportamientos_Agentes/`.
+The assignment consisted of progressively developing the behaviour of two autonomous agents across seven levels, from basic reactive navigation to exploration, planning and coordinated construction in an initially unknown environment.
 
 ## Author
 

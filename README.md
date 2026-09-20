@@ -279,9 +279,3 @@ C++ data structures used throughout the implementation include `vector`, `list`,
 Developed for the **Artificial Intelligence** course during the **2025/2026 academic year** at the **University of Granada**.
 
 The assignment consisted of progressively developing the behaviour of two autonomous agents across seven levels, from basic reactive navigation to exploration, planning and coordinated construction in an initially unknown environment.
-
-## Author
-
-**Laura Padilla**  
-Computer Engineering & Business Administration student  
-University of Granada

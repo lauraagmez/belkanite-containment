@@ -9,8 +9,6 @@ Artificial Intelligence project developed in C++ focused on the design of reacti
 
 The project follows two agents, an **Engineer** and a **Technician**, whose objective is to contain toxic Belkanite leaks by exploring the environment, planning routes and ultimately constructing a viable pipeline to a waste treatment plant.
 
-## Final mission
-
 ![Belkanite Containment final mission](images/level6-final-mission.png)
 
 The project progressively combines reactive exploration, state-space search, heuristic planning, resource constraints and multi-agent coordination.
@@ -43,12 +41,12 @@ The agents explore an initially unknown environment and progressively construct 
 
 My exploration strategy includes:
 
-- Selection of promising visible cells according to terrain priorities
-- Preference for useful equipment when it has not yet been collected
-- Tracking the number of visits to each position
-- Selection of less-visited cells to encourage exploration
-- Detection and breaking of repetitive movement loops
-- Use of `JUMP` by the Engineer when it provides a safe exploration advantage
+- Selection of promising visible cells according to terrain priorities.
+- Preference for useful equipment when it has not yet been collected.
+- Tracking the number of visits to each position.
+- Selection of less-visited cells to encourage exploration.
+- Detection and breaking of repetitive movement loops.
+- Use of `JUMP` by the Engineer when it provides a safe exploration advantage.
 
 ![Reactive exploration](images/level1-exploration.png)
 
@@ -58,9 +56,9 @@ The Engineer must reach the detected Belkanite leak while minimising the number 
 
 The state representation considers:
 
-- Position
-- Orientation
-- Equipment state
+- Position.
+- Orientation.
+- Equipment state.
 
 The search also considers the Engineer's ability to use `JUMP`, terrain accessibility, elevation differences and the effect of obtaining shoes.
 
@@ -76,16 +74,14 @@ The search is based on A*, but the accumulated cost represents **energy consumpt
 
 Movement cost depends on factors such as:
 
-- Terrain type
-- Elevation differences
-- Available actions
-- Equipment state
+- Terrain type.
+- Elevation differences.
+- Available actions.
+- Equipment state.
 
 A Chebyshev-distance heuristic is used to estimate the remaining distance to the destination.
 
 The Technician's equipment also affects accessibility: after obtaining the shoes, forest cells become traversable.
-
-![Technician A* route planning](images/level3-technician-route.png)
 
 ### Level 4 — Pipeline planning
 
@@ -95,13 +91,13 @@ The Engineer must calculate a valid pipeline connecting the Belkanite leak to a 
 
 The planner considers:
 
-- Pipeline length
-- Terrain elevation
-- Excavation operations
-- Terrain elevation operations
-- Available energy
-- Maximum ecological impact
-- Valid gravity flow between consecutive pipeline sections
+- Pipeline length.
+- Terrain elevation.
+- Excavation operations.
+- Terrain elevation operations.
+- Available energy.
+- Maximum ecological impact.
+- Valid gravity flow between consecutive pipeline sections.
 
 The pipeline state stores the current position, effective terrain height, accumulated energy consumption, ecological impact and the sequence of planned pipeline sections.
 
@@ -117,12 +113,12 @@ The solution combines the planning mechanisms developed in the previous levels w
 
 The Engineer first calculates a valid pipeline and then both agents repeatedly:
 
-- Move towards the required construction positions
-- Modify terrain when necessary
-- Position themselves on consecutive pipeline cells
-- Align face-to-face
-- Execute `INSTALL` simultaneously
-- Continue with the next pipeline section
+- Move towards the required construction positions.
+- Modify terrain when necessary.
+- Position themselves on consecutive pipeline cells.
+- Align face-to-face.
+- Execute `INSTALL` simultaneously.
+- Continue with the next pipeline section.
 
 The behaviour is organised through state machines that control the different stages of movement, alignment, terrain modification and installation.
 
@@ -158,57 +154,15 @@ This final scenario combines reactive exploration, A* route planning, pipeline p
 
 ## Artificial Intelligence techniques
 
-### Reactive agents
+The project combines several Artificial Intelligence techniques across its different levels:
 
-The first stages of the project use sensor-driven reactive behaviour.
-
-The agents analyse their immediate environment, prioritise useful terrain and equipment, maintain information about visited locations and detect repetitive movement patterns.
-
-### State-space search
-
-Navigation problems are represented through states containing the information required to distinguish different possible situations, including position, orientation and equipment.
-
-Previously explored states are tracked to avoid unnecessary repeated exploration.
-
-### A* search
-
-A* is used in several parts of the project with different optimisation criteria.
-
-For the Engineer, the search is used to find efficient routes towards a destination.
-
-For the Technician, the accumulated cost represents energy consumption, allowing the search to prioritise routes that require less energy.
-
-### Heuristic search
-
-Heuristic functions guide the search towards promising states and reduce the amount of unnecessary exploration.
-
-For Technician navigation, a Chebyshev-distance heuristic is used because movement can occur in eight orientations.
-
-### Resource-aware planning
-
-Some problems require considering more than distance.
-
-The pipeline planner also keeps track of:
-
-- Available energy
-- Ecological impact
-- Terrain elevation
-- Terrain modifications
-- Pipeline length
-
-States that exceed the available resource limits are discarded during the search.
-
-### Multi-agent coordination
-
-The advanced levels require the Engineer and Technician to cooperate.
-
-Their behaviour is controlled through state machines that coordinate movement, positioning, communication and simultaneous pipeline installation.
-
-### Hybrid reactive-deliberative behaviour
-
-The final stages combine deliberative planning with reactive mechanisms.
-
-Plans determine the general strategy, while reactive checks handle local problems such as obstacles, collisions, agent interference and incomplete information.
+- **Reactive agents:** sensor-driven navigation and exploration in initially unknown environments.
+- **State-space search:** representation of position, orientation, equipment and other relevant state information.
+- **A\* search:** route planning using different optimisation criteria depending on the problem.
+- **Heuristic search:** problem-specific heuristics, including Chebyshev distance for Technician navigation.
+- **Resource-aware planning:** consideration of energy, ecological impact, terrain elevation and pipeline constraints.
+- **Multi-agent coordination:** state machines coordinating the Engineer and Technician during pipeline construction.
+- **Hybrid reactive-deliberative behaviour:** integration of global planning with reactive responses to obstacles, collisions and incomplete information.
 
 ## My contribution
 
@@ -225,7 +179,18 @@ and consists of the behaviour developed for both autonomous agents:
 - `tecnico.cpp`
 - `tecnico.hpp`
 
-The implemented work includes reactive exploration, state representation, search algorithms, heuristic functions, energy-aware planning, pipeline planning, state machines and multi-agent coordination.
+The implemented work includes:
+
+- Reactive exploration.
+- State representation.
+- State-space search.
+- A* search algorithms.
+- Heuristic functions.
+- Energy-aware route planning.
+- Resource-constrained pipeline planning.
+- State machines.
+- Multi-agent coordination.
+- Reactive handling of collisions, blocking situations and incomplete information.
 
 ## Project structure
 
@@ -239,7 +204,6 @@ belkanite-containment/
 ├── images/
 │   ├── level1-exploration.png
 │   ├── level2-engineer-route.png
-│   ├── level3-technician-route.png
 │   ├── level4-pipeline-plan.png
 │   ├── level5-construction.png
 │   └── level6-final-mission.png
